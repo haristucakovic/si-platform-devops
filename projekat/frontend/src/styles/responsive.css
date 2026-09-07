@@ -1,0 +1,251 @@
+/* ─── LANDING PAGE ─── */
+
+/* Navbar: sakrij linkove i dugmad na mobilnom */
+@media (max-width: 768px) {
+  .lp-nav-links   { display: none !important; }
+  .lp-nav-actions { display: none !important; }
+  .lp-hamburger   { display: flex !important; }
+}
+
+/* Mobile meni (drawer) */
+.lp-mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  position: fixed;
+  top: 68px;
+  left: 0; right: 0;
+  background: white;
+  border-bottom: 1px solid #d0e3f7;
+  padding: 16px 20px 20px;
+  z-index: 99;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.lp-mobile-menu.open { display: flex; }
+.dark .lp-mobile-menu {
+  background: #111827;
+  border-color: #1e2d40;
+}
+.lp-mobile-menu a,
+.lp-mobile-menu button {
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #3a5a8a;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background 0.15s;
+}
+.lp-mobile-menu a:hover,
+.lp-mobile-menu button:hover { background: #f0f5fb; }
+.dark .lp-mobile-menu a,
+.dark .lp-mobile-menu button { color: #cbd5e1; }
+.dark .lp-mobile-menu a:hover,
+.dark .lp-mobile-menu button:hover { background: #1e2d40; }
+.lp-mobile-menu .lp-mobile-divider {
+  height: 1px;
+  background: #e0edf9;
+  margin: 6px 0;
+}
+.dark .lp-mobile-menu .lp-mobile-divider { background: #1e2d40; }
+.lp-mobile-menu .lp-mobile-btn-primary {
+  background: linear-gradient(135deg, #1a6fd4, #2d9cdb);
+  color: white !important;
+  font-weight: 700 !important;
+  text-align: center;
+}
+
+/* Hero: stack na mobilnom */
+@media (max-width: 1024px) {
+  .lp-hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+  .lp-hero-carousel { display: flex; justify-content: center; }
+}
+@media (max-width: 768px) {
+  .lp-hero-section { padding: 90px 1.25rem 50px !important; }
+  .lp-hero-btns { flex-direction: column !important; }
+  .lp-hero-btns a { justify-content: center; width: 100%; box-sizing: border-box; }
+}
+
+/* How it works / Roles: auto-fit već radi, samo padding */
+@media (max-width: 768px) {
+  .lp-section-pad { padding: 60px 1.25rem !important; }
+}
+
+/* For students / For companies: 2 col → 1 col */
+@media (max-width: 1024px) {
+  .lp-two-col { grid-template-columns: 1fr !important; gap: 36px !important; }
+  .lp-feature-grid { grid-template-columns: 1fr 1fr !important; }
+}
+@media (max-width: 480px) {
+  .lp-feature-grid { grid-template-columns: 1fr !important; }
+}
+
+/* CTA buttons */
+@media (max-width: 480px) {
+  .lp-cta-btns { flex-direction: column !important; align-items: stretch !important; }
+  .lp-cta-btns a { justify-content: center !important; text-align: center; }
+}
+
+/* Footer grid: 4 col → 2 col → 1 col */
+@media (max-width: 900px) {
+  .lp-footer-grid { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+}
+@media (max-width: 480px) {
+  .lp-footer-grid { grid-template-columns: 1fr !important; }
+  .lp-footer-bottom { flex-direction: column !important; text-align: center; gap: 6px !important; }
+}
+
+/* ─── ADMIN DASHBOARD ─── */
+
+/* Tablet: suzi sidebar */
+@media (max-width: 1024px) {
+  .ad-sidebar { width: 180px; }
+  .ad-content { padding: 28px 24px 50px; }
+  .ad-stats-grid { grid-template-columns: 1fr 1fr; }
+  .ad-dashboard-cols { grid-template-columns: 1fr; }
+  .ad-roles-cols { grid-template-columns: 1fr; }
+}
+
+/* Mobile: sidebar se sklanja, hamburger se pojavljuje */
+@media (max-width: 768px) {
+  .ad-layout { flex-direction: column; }
+
+  .ad-sidebar {
+    width: 100%;
+    min-height: unset;
+    border-right: none;
+    border-bottom: 1px solid #e0edf9;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 16px;
+    height: 56px;
+    overflow: hidden;
+    transition: height 0.3s ease;
+    position: relative;
+    z-index: 50;
+  }
+  .dark .ad-sidebar { border-color: #1e2d40; }
+
+  .ad-sidebar.open { height: auto; flex-direction: column; align-items: flex-start; padding: 16px; }
+
+  .ad-logo { border-bottom: none; padding: 0; flex: 1; }
+  .ad-logo-sub { display: none; }
+  .ad-sidebar.open .ad-logo { border-bottom: 1px solid #e0edf9; padding-bottom: 14px; margin-bottom: 6px; width: 100%; }
+  .dark .ad-sidebar.open .ad-logo { border-color: #1e2d40; }
+
+  .ad-nav-group { display: none; padding: 0; width: 100%; }
+  .ad-sidebar.open .ad-nav-group { display: block; }
+
+  .ad-sidebar-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    background: none;
+    border: 1px solid #d0e3f7;
+    border-radius: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: #5a7a9a;
+  }
+  .dark .ad-sidebar-toggle { border-color: #1e2d40; color: #7a9ab8; }
+
+  .ad-content { padding: 20px 16px 40px; }
+  .ad-stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .ad-dashboard-cols { grid-template-columns: 1fr; }
+  .ad-roles-cols { grid-template-columns: 1fr; }
+  .ad-stat-value { font-size: 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .ad-stats-grid { grid-template-columns: 1fr 1fr; }
+  .ad-table th, .ad-table td { padding: 10px 14px; }
+  .ad-title { font-size: 1.4rem; }
+  .ad-filters { gap: 6px; }
+  .ad-filter-btn { padding: 5px 12px; font-size: 0.75rem; }
+}
+
+/* Tabela zahtjeva na mobilnom */
+/* Tabela zahtjeva na mobilnom */
+@media (max-width: 768px) {
+  .ad-col-institution,
+  .ad-col-date { display: none; }
+
+  .ad-table { table-layout: fixed; width: 100%; }
+
+  .ad-table th:first-child,
+  .ad-table td:first-child { width: 45%; }
+
+  .ad-table th:nth-child(2),
+  .ad-table td:nth-child(2) { width: 30%; }
+
+  .ad-table th:last-child,
+  .ad-table td:last-child { width: 25%; }
+
+  .ad-actions { flex-direction: column; gap: 4px; }
+
+  .ad-btn { padding: 5px 8px; font-size: 0.72rem; width: 100%; text-align: center; }
+
+  .ad-section { overflow-x: auto; }
+  
+}
+
+/* Za kompanije mobile badge */
+.lp-companies-badge-mobile {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .lp-companies-badge-mobile {
+    display: inline-block;
+    width: fit-content;
+    background: #ede8ff;
+    color: #6d4ce1;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    border: 1px solid #c9bbf5;
+  }
+
+  .lp-companies-badge-desktop {
+    display: none !important;
+  }
+}
+
+/* Dark mode toggle pored hamburgera */
+@media (max-width: 768px) {
+  .lp-darkmode-mobile {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid #d0e3f7;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  .ad-col-role { display: none; }
+
+  .dark .lp-darkmode-mobile {
+    border-color: #374151;
+  }
+   nav {
+    padding: 0 6px !important;
+  }
+
+  /* Pomjeri hamburger da ne koristi marginLeft auto više */
+  .lp-hamburger {
+    margin-left: 8px !important;
+  }
+}
+

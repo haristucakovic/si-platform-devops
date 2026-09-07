@@ -1,0 +1,91 @@
+/* ============================================================
+   variables.css  –  Shared design tokens
+   Import this once in main.jsx BEFORE any page-level CSS.
+   All page stylesheets should reference these variables so
+   the system stays visually consistent.
+   ============================================================ */
+
+:root {
+  /* ── Brand colours ── */
+  --color-primary:        #1a6fd4;
+  --color-primary-dark:   #155bb5;
+  --color-primary-light:  #2d9cdb;
+  --color-primary-subtle: #ddeeff;
+
+  /* ── Neutrals ── */
+  --color-dark:           #0d1f3c;
+  --color-muted:          #5a7a9a;
+  --color-faint:          #9aabbc;
+  --color-border:         #e0edf9;
+  --color-border-mid:     #d0e3f7;
+
+  /* ── Surfaces ── */
+  --color-bg:             #f0f6ff;
+  --color-surface:        #ffffff;
+  --color-surface-alt:    #f8fbff;
+  --color-surface-input:  #f8fbff;
+
+  /* ── Semantic ── */
+  --color-success:        #0e9e6e;
+  --color-success-subtle: #e0f7ef;
+  --color-warning:        #e07b1a;
+  --color-warning-subtle: #fef0dd;
+  --color-danger:         #c0392b;
+  --color-danger-subtle:  #fde8e6;
+  --color-purple:         #6d4ce1;
+  --color-purple-subtle:  #ede8ff;
+
+  /* ── Typography ── */
+  --font-sans:            'Sora', 'Segoe UI', sans-serif;
+  --font-size-xs:         0.68rem;
+  --font-size-sm:         0.78rem;
+  --font-size-base:       0.875rem;
+  --font-size-md:         0.95rem;
+  --font-size-lg:         1.1rem;
+  --font-size-xl:         1.35rem;
+  --font-size-2xl:        1.75rem;
+
+  /* ── Spacing ── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* ── Radius ── */
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-pill: 999px;
+
+  /* ── Shadows ── */
+  --shadow-card:    0 2px 12px rgba(26, 111, 212, 0.07);
+  --shadow-card-hover: 0 6px 20px rgba(26, 111, 212, 0.13);
+  --shadow-btn:     0 4px 14px rgba(26, 111, 212, 0.30);
+  --shadow-toast:   0 6px 24px rgba(0, 0, 0, 0.14);
+
+  /* ── Transitions ── */
+  --transition-fast:   0.15s ease;
+  --transition-medium: 0.25s ease;
+}
+
+/* ── Dark mode tokens ── */
+.dark {
+  --color-bg:            #0d1117;
+  --color-surface:       #111827;
+  --color-surface-alt:   #161f2e;
+  --color-surface-input: #161f2e;
+  --color-dark:          #e2e8f0;
+  --color-muted:         #7a9ab8;
+  --color-faint:         #5a7a9a;
+  --color-border:        #1e2d40;
+  --color-border-mid:    #1e2d40;
+
+  --shadow-card:         0 2px 12px rgba(0, 0, 0, 0.30);
+  --shadow-card-hover:   0 6px 20px rgba(0, 0, 0, 0.40);
+}
