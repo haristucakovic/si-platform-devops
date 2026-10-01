@@ -44,5 +44,19 @@ services:
       postgres:
         condition: service_healthy
 
+  frontend:
+    build:
+      context: ./projekat/frontend
+      dockerfile: Dockerfile
+
+    container_name: si-frontend
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+
+    depends_on:
+      - backend
+
 volumes:
   postgres_data:
