@@ -21,5 +21,28 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build:
+      context: ./projekat/backend
+      dockerfile: Dockerfile
+
+    container_name: si-backend
+    restart: unless-stopped
+
+    env_file:
+      - ./projekat/backend/.env
+
+    environment:
+      DB_URL: postgresql://si_user:si_password@postgres:5432/si_platform
+      DB_SSL: "false"
+      PORT: 3000
+
+    ports:
+      - "3000:3000"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
 volumes:
   postgres_data:
