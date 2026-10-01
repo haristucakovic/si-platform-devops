@@ -1,0 +1,138 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend:
+    name: Backend checks
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+
+        env:
+          POSTGRES_DB: si_platform_test
+          POSTGRES_USER: si_user
+          POSTGRES_PASSWORD: si_password
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd "pg_isready -U si_user -d si_platform_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      NODE_ENV: test
+      PORT: 3000
+
+      DB_URL: postgresql://si_user:si_password@localhost:5432/si_platform_test
+      DB_SSL: "false"
+
+      JWT_SECRET: ci-test-secret
+
+      SUPABASE_URL: ""
+      SUPABASE_SERVICE_ROLE_KEY: ""
+
+      BREVO_API_KEY: ""
+      BREVO_SENDER_EMAIL: ""
+
+    defaults:
+      run:
+        working-directory: projekat/backend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: projekat/backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Initialize test database
+        run: |
+          node -e "
+          const { sequelize } = require('./src/infrastructure/database/models');
+          sequelize.sync({ force: true })
+            .then(() => {
+              console.log('Test database initialized');
+              return sequelize.close();
+            })
+            .catch((err) => {
+              console.error(err);
+              process.exit(1);
+            });
+          "
+
+      - name: Run backend tests
+        run: npm test -- --runInBand
+
+
+  frontend:
+    name: Frontend checks
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: projekat/frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: projekat/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run frontend tests
+        run: npm test
+
+      - name: Build frontend
+        run: npm run build
+
+
+  docker:
+    name: Docker builds
+    runs-on: ubuntu-latest
+
+    needs:
+      - backend
+      - frontend
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t si-backend:ci ./projekat/backend
+
+      - name: Build frontend image
+        run: docker build -t si-frontend:ci ./projekat/frontend
