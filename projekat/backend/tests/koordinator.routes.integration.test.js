@@ -6,6 +6,16 @@ const request  = require('supertest');
 const jwt      = require('jsonwebtoken');
 const bcrypt   = require('bcrypt');
 const { Op }   = require('sequelize');
+jest.mock('../src/business/services/email.service', () => {
+  const actual = jest.requireActual('../src/business/services/email.service');
+
+  return {
+    ...actual,
+    sendAccountApprovedEmail: jest.fn().mockResolvedValue(undefined),
+    sendAccountRejectedEmail: jest.fn().mockResolvedValue(undefined),
+    sendPrijavaStatusEmail: jest.fn().mockResolvedValue(undefined),
+  };
+});
 const app      = require('../src/app');
 const {
   User,

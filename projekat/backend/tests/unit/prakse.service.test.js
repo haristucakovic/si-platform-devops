@@ -483,6 +483,14 @@ describe('backfillAcceptedPractices', () => {
 });
 
 describe('createActivity', () => {
+    beforeEach(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2026-06-15T12:00:00.000Z'));
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
   test('kreira aktivnost za aktivnu praksu studenta', async () => {
     db.User.findByPk.mockResolvedValue({ id: 1, role: 'STUDENT' });
     db.Student.findOne.mockResolvedValue({ id: 20 });
@@ -535,6 +543,14 @@ describe('getPracticeActivities', () => {
 });
 
 describe('practice attendance', () => {
+    beforeEach(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2026-06-15T12:00:00.000Z'));
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
   test('student moze vidjeti evidentirano prisustvo za svoju praksu', async () => {
     db.User.findByPk.mockResolvedValue({ id: 1, role: 'STUDENT' });
     db.Student.findOne.mockResolvedValue({ id: 20 });

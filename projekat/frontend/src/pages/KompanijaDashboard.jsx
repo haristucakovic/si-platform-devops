@@ -201,7 +201,9 @@ export default function KompanijaDashboard() {
       try {
         const profile = await getCompanyProfile();
         if (active) setCompanyProfile(profile);
-      } catch { }
+      } catch {
+	//Ignore transient profile refresh failures
+ }
     }
     function handleVisibilityChange() {
       if (document.visibilityState === 'visible') refreshCompanyProfile();
