@@ -36,8 +36,7 @@ services:
       DB_URL: ${DB_URL}
       DB_SSL: "false"
       DB_SYNC_ALTER: "false"
-      RUN_BACKGROUND_JOBS: ${BLUE_RUN_BACKGROUND_JOBS:-false}
-
+      RUN_BACKGROUND_JOBS: "false"
       JWT_SECRET: ${JWT_SECRET}
 
       SUPABASE_URL: ${SUPABASE_URL:-}
@@ -95,8 +94,7 @@ services:
       DB_URL: ${DB_URL}
       DB_SSL: "false"
       DB_SYNC_ALTER: "false"
-      RUN_BACKGROUND_JOBS: ${GREEN_RUN_BACKGROUND_JOBS:-false}
-
+      RUN_BACKGROUND_JOBS: "false"
       JWT_SECRET: ${JWT_SECRET}
 
       SUPABASE_URL: ${SUPABASE_URL:-}
@@ -168,3 +166,31 @@ volumes:
   postgres_prod_data:
     external: true
     name: si-platform_postgres_prod_data
+
+  worker:
+    image: ghcr.io/haristucakovic/si-platform-backend:${WORKER_IMAGE_TAG:-latest}
+    restart: unless-stopped
+
+    command: ["node", "src/worker.js"]
+
+    environment:
+      NODE_ENV: production
+
+      DB_URL: ${DB_URL}
+      DB_SSL: "false"
+      DB_SYNC_ALTER: "false"
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-}
+
+    networks:
+      - db
+
+    depends_on:
+      postgres:
+        condition: service_healthy

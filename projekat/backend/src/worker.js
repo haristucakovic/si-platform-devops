@@ -1,4 +1,3 @@
-const app = require('./app');
 const { sequelize, PrijavaNaPraksu } = require('./infrastructure/database/models');
 const {
   backfillApplicationStatuses,
@@ -6,8 +5,6 @@ const {
 } = require('./business/services/applicationStatus.service');
 const { backfillAcceptedPractices } = require('./business/services/prakse.service');
 const { startPracticeCompletionJob } = require('./jobs/practiceCompletion.job');
-
-const PORT = process.env.PORT || 3000;
 
 const syncOptions =
   process.env.DB_SYNC_ALTER === 'true'
@@ -21,17 +18,11 @@ sequelize
     await backfillStudentStatuses(PrijavaNaPraksu);
     await backfillAcceptedPractices();
 
-    if (process.env.RUN_BACKGROUND_JOBS === 'true') {
-      startPracticeCompletionJob();
-    }
+    startPracticeCompletionJob();
 
-    console.log('Baza spojena');
-
-    app.listen(PORT, () => {
-      console.log(`Server listening on port ${PORT}`);
-    });
+    console.log('Background worker started.');
   })
   .catch((err) => {
-    console.error('Greska:', err);
+    console.error('Worker startup error:', err);
     process.exit(1);
   });
