@@ -68,7 +68,7 @@ wait_for_color() {
   for attempt in {1..30}; do
     if "${COMPOSE[@]}" exec -T \
       "frontend-${color}" \
-      wget -qO- http://localhost/health >/dev/null 2>&1; then
+      wget -qO- http://127.0.0.1/health >/dev/null 2>&1; then
 
       echo "${color} environment is healthy."
       return 0
