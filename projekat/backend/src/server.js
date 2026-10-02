@@ -21,4 +21,7 @@ sequelize
       console.log(`Server listening on port ${PORT}`);
     });
   })
-  .catch((err) => console.error('Greska:', err));
+  .catch((err) => {
+  console.error('Greska:', err);
+  process.exit(1);
+});
