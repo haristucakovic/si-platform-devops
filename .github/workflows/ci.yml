@@ -126,7 +126,8 @@ jobs:
     needs:
       - backend
       - frontend
-
+      - bash
+	
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -136,3 +137,19 @@ jobs:
 
       - name: Build frontend image
         run: docker build -t si-frontend:ci ./projekat/frontend
+
+  bash:
+    name: Bash checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Run ShellCheck
+        run: shellcheck scripts/*.sh
