@@ -9,8 +9,13 @@ const { startPracticeCompletionJob } = require('./jobs/practiceCompletion.job');
 
 const PORT = process.env.PORT || 3000;
 
+const syncOptions =
+  process.env.DB_SYNC_ALTER === 'true'
+    ? { alter: true }
+    : {};
+
 sequelize
-  .sync({ alter: true })
+  .sync(syncOptions)
   .then(async () => {
     await backfillApplicationStatuses(PrijavaNaPraksu);
     await backfillStudentStatuses(PrijavaNaPraksu);

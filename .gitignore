@@ -1,2 +1,6 @@
 backups/
 .env.production
+deploy/nginx/active.conf
+deploy/active-color
+deploy/previous-color
+deploy/releases.env

@@ -1,0 +1,170 @@
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+
+    networks:
+      - db
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+  backend-blue:
+    image: ghcr.io/haristucakovic/si-platform-backend:${BLUE_IMAGE_TAG:-latest}
+    restart: unless-stopped
+
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+
+      DB_URL: ${DB_URL}
+      DB_SSL: "false"
+      DB_SYNC_ALTER: "false"
+      RUN_BACKGROUND_JOBS: ${BLUE_RUN_BACKGROUND_JOBS:-false}
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-}
+
+    expose:
+      - "3000"
+
+    networks:
+      blue:
+        aliases:
+          - backend
+      db:
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+
+  frontend-blue:
+    image: ghcr.io/haristucakovic/si-platform-frontend:${BLUE_IMAGE_TAG:-latest}
+    restart: unless-stopped
+
+    networks:
+      - blue
+
+    depends_on:
+      backend-blue:
+        condition: service_healthy
+
+
+  backend-green:
+    image: ghcr.io/haristucakovic/si-platform-backend:${GREEN_IMAGE_TAG:-latest}
+    restart: unless-stopped
+
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+
+      DB_URL: ${DB_URL}
+      DB_SSL: "false"
+      DB_SYNC_ALTER: "false"
+      RUN_BACKGROUND_JOBS: ${GREEN_RUN_BACKGROUND_JOBS:-false}
+
+      JWT_SECRET: ${JWT_SECRET}
+
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+
+      BREVO_API_KEY: ${BREVO_API_KEY:-}
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-}
+
+    expose:
+      - "3000"
+
+    networks:
+      green:
+        aliases:
+          - backend
+      db:
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+
+  frontend-green:
+    image: ghcr.io/haristucakovic/si-platform-frontend:${GREEN_IMAGE_TAG:-latest}
+    restart: unless-stopped
+
+    networks:
+      - green
+
+    depends_on:
+      backend-green:
+        condition: service_healthy
+
+
+  gateway:
+    image: nginx:alpine
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - ./deploy/nginx/active.conf:/etc/nginx/conf.d/default.conf:ro
+
+    networks:
+      - blue
+      - green
+
+
+networks:
+  blue:
+  green:
+  db:
+
+
+volumes:
+  postgres_prod_data:
+    external: true
+    name: si-platform_postgres_prod_data
