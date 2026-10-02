@@ -199,7 +199,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-    - name: Configure SSH
+      - name: Configure SSH
   run: |
     mkdir -p ~/.ssh
     chmod 700 ~/.ssh
