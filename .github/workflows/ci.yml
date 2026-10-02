@@ -120,23 +120,55 @@ jobs:
 
 
   docker:
-    name: Docker builds
+    name: Docker build and publish
     runs-on: ubuntu-latest
 
     needs:
       - backend
       - frontend
       - bash
-  
+
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Build backend image
-        run: docker build -t si-backend:ci ./projekat/backend
+        run: |
+          docker build \
+            -t ghcr.io/haristucakovic/si-platform-backend:${{ github.sha }} \
+            -t ghcr.io/haristucakovic/si-platform-backend:latest \
+            ./projekat/backend
 
       - name: Build frontend image
-        run: docker build -t si-frontend:ci ./projekat/frontend
+        run: |
+          docker build \
+            -t ghcr.io/haristucakovic/si-platform-frontend:${{ github.sha }} \
+            -t ghcr.io/haristucakovic/si-platform-frontend:latest \
+            ./projekat/frontend
+
+      - name: Log in to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" \
+            | docker login ghcr.io \
+                -u "${{ github.actor }}" \
+                --password-stdin
+
+      - name: Push backend image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker push ghcr.io/haristucakovic/si-platform-backend:${{ github.sha }}
+          docker push ghcr.io/haristucakovic/si-platform-backend:latest
+
+      - name: Push frontend image
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker push ghcr.io/haristucakovic/si-platform-frontend:${{ github.sha }}
+          docker push ghcr.io/haristucakovic/si-platform-frontend:latest
 
   bash:
     name: Bash checks
